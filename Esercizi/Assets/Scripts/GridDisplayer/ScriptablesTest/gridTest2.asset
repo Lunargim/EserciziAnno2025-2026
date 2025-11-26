@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16f7157144dc98143b41d14d4a1d784e, type: 3}
   m_Name: gridTest2
   m_EditorClassIdentifier: 
-  gridCellSize: 0
-  gridSize: {x: 0, y: 0}
+  gridCellSize: 8
+  gridSize: {x: 4, y: 4}
