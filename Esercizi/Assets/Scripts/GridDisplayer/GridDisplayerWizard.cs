@@ -46,10 +46,10 @@ public class GridDisplayerWizard : EditorWindow
           
         void DrawVerticalLines(Rect rect, float cellSize, float cellCount)
         {
-            Handles.DrawLine(new Vector2(rect.y, rect.x + cellSize), new Vector2(rect.x + cellSize,rect.width));
+            Handles.DrawLine(new Vector2(rect.x + cellSize, rect.y), new Vector2(rect.x + cellSize,rect.width));
             EditorGUILayout.EndVertical();
             rect.x += cellSize;
-            EditorGUILayout.Space(cellSize);
-        }  
+            //EditorGUILayout.Space(cellSize);
+        }
     }
 }
