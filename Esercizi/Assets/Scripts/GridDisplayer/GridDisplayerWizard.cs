@@ -25,25 +25,24 @@ public class GridDisplayerWizard : EditorWindow
         
         for (int i = 0; i < gridSize.x; i++)
         {
-            //var rectHorizontal = EditorGUILayout.BeginHorizontal();
+            var rectHorizontal = EditorGUILayout.BeginHorizontal(GUILayout.Height(gridCellSize));
             var rectVertical = EditorGUILayout.BeginVertical();
-            //DrawHorizontalLines(rectHorizontal);
-            DrawVerticalLines(rectVertical);
+            DrawHorizontalLines(rectHorizontal, gridCellSize);
+            DrawVerticalLines(rectVertical, gridCellSize);
         }
 
-        void DrawHorizontalLines(Rect rect)
+        void DrawHorizontalLines(Rect rect, float cellSize)
         {
             Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.width, rect.y));
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space();
+            EditorGUILayout.Space(cellSize);
         }    
           
-        void DrawVerticalLines(Rect rect)
+        void DrawVerticalLines(Rect rect, float cellSize)
         {
-            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.width, rect.y));
+            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, 0));
             EditorGUILayout.EndVertical();
-            EditorGUILayout.Space();
-        }   
-            
+            EditorGUILayout.Space(cellSize);
+        }  
     }
 }
