@@ -23,25 +23,32 @@ public class GridDisplayerWizard : EditorWindow
         gridCellSize = EditorGUILayout.FloatField("Grid Cell Size", gridCellSize);
         gridSize = EditorGUILayout.Vector2Field("Grid Size", gridSize);
         
+        
+        
         for (int i = 0; i < gridSize.x; i++)
         {
             var rectHorizontal = EditorGUILayout.BeginHorizontal(GUILayout.Height(gridCellSize));
-            var rectVertical = EditorGUILayout.BeginVertical();
-            DrawHorizontalLines(rectHorizontal, gridCellSize);
-            DrawVerticalLines(rectVertical, gridCellSize);
+            DrawHorizontalLines(rectHorizontal, gridCellSize, gridSize.x);
         }
 
-        void DrawHorizontalLines(Rect rect, float cellSize)
+        for (int i = 0; i < gridSize.y; i++)
         {
-            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.width, rect.y));
+            var rectVertical = EditorGUILayout.BeginVertical(GUILayout.Height(gridCellSize));
+            DrawVerticalLines(rectVertical, gridCellSize, gridSize.x);
+        }
+
+        void DrawHorizontalLines(Rect rect, float cellSize, float cellCount)
+        {
+            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.width, rect.y)); ;
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(cellSize);
         }    
           
-        void DrawVerticalLines(Rect rect, float cellSize)
+        void DrawVerticalLines(Rect rect, float cellSize, float cellCount)
         {
-            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.x, 0));
+            Handles.DrawLine(new Vector2(rect.y, rect.x + cellSize), new Vector2(rect.x + cellSize,rect.width));
             EditorGUILayout.EndVertical();
+            rect.x += cellSize;
             EditorGUILayout.Space(cellSize);
         }  
     }
