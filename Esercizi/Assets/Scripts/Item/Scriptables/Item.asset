@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16f7157144dc98143b41d14d4a1d784e, type: 3}
-  m_Name: gridTest1
+  m_Script: {fileID: 11500000, guid: 8fade3a4bd19081479ec37ff1c1f1a62, type: 3}
+  m_Name: Item
   m_EditorClassIdentifier: 
-  gridCellSize: 50
-  gridSize: {x: 2, y: 4}
+  Name: 
+  icon: {fileID: 0}
+  stats:
+    Value: 0
+    Weight: 0
+    Dimensions: {x: 0, y: 0}
+    Health: {x: 0, y: 0}

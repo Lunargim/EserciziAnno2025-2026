@@ -5,51 +5,81 @@ public class GridDisplayerWizard : EditorWindow
 {
     public GridDisplayerScriptable gridDisplayerScriptable;
     public float gridCellSize;
-    public Vector2 gridSize;
-    
+    public Vector2Int gridSize;
+    private Vector2 _scrollPosition;
+    public int[,] values;
+    bool hasChanged = false;
+
     [MenuItem("Tools/Grid Displayer")]
     public static void ShowWindow()
     {
         GetWindow(typeof(GridDisplayerWizard));
     }
+
     void OnGUI()
     {
-        gridDisplayerScriptable = EditorGUILayout.ObjectField("Grid Displayer",  gridDisplayerScriptable, typeof(ScriptableObject), true) as GridDisplayerScriptable;
+        gridDisplayerScriptable =
+            EditorGUILayout.ObjectField("Grid Displayer", gridDisplayerScriptable, typeof(ScriptableObject), true) as
+                GridDisplayerScriptable;
         if (gridDisplayerScriptable != null)
         {
             gridCellSize = gridDisplayerScriptable.gridCellSize;
             gridSize = gridDisplayerScriptable.gridSize;
+            
+            if (gridDisplayerScriptable.gridContentValues != null)
+            {
+                values = gridDisplayerScriptable.gridContentValues;
+            }
+            else
+            {
+                values = new int[gridSize.x, gridSize.y];
+                gridDisplayerScriptable.gridContentValues = values;
+            }
         }
+
         gridCellSize = EditorGUILayout.FloatField("Grid Cell Size", gridCellSize);
-        gridSize = EditorGUILayout.Vector2Field("Grid Size", gridSize);
-        
-        
-        
-        for (int i = 0; i < gridSize.x; i++)
+        gridSize = EditorGUILayout.Vector2IntField("Grid Size", gridSize);
+
+        if (gridDisplayerScriptable != null)
         {
-            var rectHorizontal = EditorGUILayout.BeginHorizontal(GUILayout.Height(gridCellSize));
-            DrawHorizontalLines(rectHorizontal, gridCellSize, gridSize.x);
+            hasChanged = gridDisplayerScriptable.gridCellSize != gridCellSize ||
+                         gridDisplayerScriptable.gridSize != gridSize;
+            gridDisplayerScriptable.gridCellSize = gridCellSize;
+            gridDisplayerScriptable.gridSize = gridSize;
+            
+            if (hasChanged)
+            {
+                values = new int[gridSize.x, gridSize.y];
+                EditorUtility.SetDirty(gridDisplayerScriptable);
+                AssetDatabase.SaveAssets();
+            }
+            
         }
 
-        for (int i = 0; i < gridSize.y; i++)
+        _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
+        
+        for (int y = 0; y < gridSize.y; y++)
         {
-            var rectVertical = EditorGUILayout.BeginVertical(GUILayout.Height(gridCellSize));
-            DrawVerticalLines(rectVertical, gridCellSize, gridSize.x);
+            GUILayout.BeginHorizontal();
+            for (int x = 0; x < gridSize.x; x++) //draw row
+            {
+                if (gridDisplayerScriptable.gridContentValues.GetLength(0) <= x ||
+                    gridDisplayerScriptable.gridContentValues.GetLength(1) <= y)
+                {
+                    values[x,y] = 0;
+                }
+                else
+                {
+                    values[x,y] = gridDisplayerScriptable.gridContentValues[x,y];
+                }
+                
+                GUILayout.Button(values[x,y].ToString(), GUILayout.Height(gridCellSize), GUILayout.Width(gridCellSize));
+                EditorUtility.SetDirty(gridDisplayerScriptable);
+            }
+            GUILayout.EndHorizontal();
         }
-
-        void DrawHorizontalLines(Rect rect, float cellSize, float cellCount)
-        {
-            Handles.DrawLine(new Vector2(rect.x, rect.y), new Vector2(rect.width, rect.y)); ;
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space(cellSize);
-        }    
-          
-        void DrawVerticalLines(Rect rect, float cellSize, float cellCount)
-        {
-            Handles.DrawLine(new Vector2(rect.x + cellSize, rect.y), new Vector2(rect.x + cellSize,rect.width));
-            EditorGUILayout.EndVertical();
-            rect.x += cellSize;
-            //EditorGUILayout.Space(cellSize);
-        }
+        gridDisplayerScriptable.gridContentValues = values;
+        GUILayout.EndScrollView();
     }
+    
 }
